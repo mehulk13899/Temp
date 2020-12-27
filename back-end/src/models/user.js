@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt=require('bcrypt');
+const { unsubscribe } = require('../routes/auth');
 
 const userSchema=new mongoose.Schema({
     firstName:{
@@ -51,6 +52,11 @@ userSchema.virtual('password')
 {
     this.hash_password=bcrypt.hashSync(password,10);
 })
+
+userSchema.virtual('fullname')
+.get(function(){
+    return `${this.firstName} ${this.lastname}`
+});
 
 userSchema.methods ={
     authenticate:function(password){

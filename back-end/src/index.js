@@ -1,20 +1,22 @@
 const express=require('express');
 const app=express();
 const bodyParser=require('body-parser');
-const env=require('dotenv');
 const mongoose = require('mongoose');
 
 
 //routes
-const userRoutes=require('./routes/user');
+const authRoutes=require('./routes/auth');
 //enviorment variable;
-env.config();
+const env=require('dotenv');
+env.config({path:'F:/ecommerce/back-end/src/.env'});
+console.log(process.env.MONGO_DB_USER);
+console.log('Hello');
 
 //middleware
 app.use(bodyParser());
-app.use('/api',userRoutes);
+app.use('/api',authRoutes);
 
- mongoose.connect(`mongodb+srv://admin:admin@cluster0.a5mtk.mongodb.net/ecommerce_new?retryWrites=true&w=majority`,
+ mongoose.connect(`mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@cluster0.a5mtk.mongodb.net/${process.env.MONGO_DB_DATABASE}?retryWrites=true&w=majority`,
  {
      useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -23,6 +25,6 @@ app.use('/api',userRoutes);
         console.log('Database connected');
     });
 
-app.listen(3000,()=>{
-    console.log(`Server is Running on port 5000`)
+app.listen(process.env.PORT,()=>{
+    console.log(`Server is Running on port ${process.env.PORT}`)
 });
