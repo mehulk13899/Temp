@@ -72,10 +72,3 @@ exports.signin =(req,res)=>
 
     });
 }
-
-exports.requireSignin=(req,res,next)=>{
-        const token=req.headers.authorization.split(" ")[1];
-        console.log(token);
-        const admin = jwt.verify(token,process.env.JWT_SECRET);
-        next();
-}
