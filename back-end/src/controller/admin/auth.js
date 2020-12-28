@@ -48,7 +48,6 @@ exports.signup =(req,res)=>{
 
 exports.signin =(req,res)=>
 {
-    console.log('Hello');
     Admin.findOne({email:req.body.email})
     .exec((error,admin)=>{
         if(error) return res.status(400).json({error,
@@ -56,7 +55,7 @@ exports.signin =(req,res)=>
         if(admin) {
             if(admin.authenticate(req.body.password)&&admin.role==='admin')
             {
-                const token=jwt.sign({_id:admin._id},process.env.JWT_SECRET,{expiresIn:'1h'});
+                const token=jwt.sign({_id:admin._id,role:admin.role},process.env.JWT_SECRET,{expiresIn:'1h'});
                 const{_id,firstName,lastname,email,role,fullname}=admin;
                 res.status(200).json({
                     token,

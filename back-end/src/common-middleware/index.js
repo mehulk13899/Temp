@@ -16,11 +16,13 @@ exports.isRequestValidated=(req,res,next)=>{
 exports.requireSignin=(req,res,next)=>{
     if(req.headers.authorization){
         const token=req.headers.authorization.split(" ")[1];
-        console.log(token);
         const admin = jwt.verify(token,process.env.JWT_SECRET);
-        next();
+        req.admin=admin;
     }
-    return res.status(400).jason({message:'Token required'})
+    else{
+        return res.status(400).json({message:'Token required'})
+    }
+    next();
 }
 
 exports.userMiddleware=(req,res,next)=>{
@@ -28,7 +30,8 @@ exports.userMiddleware=(req,res,next)=>{
 }
 
 exports.adminMiddleware=(req,res,next)=>{
-    if(req.user.role!=='admin'){
+  
+    if(req.admin.role!=='admin'){
         return res.status(400).jason({message:'Access denied'})
     }
     next();
